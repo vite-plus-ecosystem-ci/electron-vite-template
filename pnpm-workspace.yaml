@@ -7,7 +7,7 @@ packages:
 # electron 下载运行时二进制，esbuild 安装平台二进制，
 # @parcel/watcher 为 vite-plus 的原生文件监听，electron-winstaller 为打包链依赖
 allowBuilds:
-  '@parcel/watcher': true
+  "@parcel/watcher": true
   electron: true
   electron-winstaller: true
   esbuild: true
@@ -15,28 +15,38 @@ allowBuilds:
 minimumReleaseAgeExclude:
   # ecosystem-ci smoke test: preview builds and freshly pinned toolchain packages
   - vite-plus
-  - '@voidzero-dev/*'
-  - '@oxc-project/*'
+  - "@voidzero-dev/*"
+  - "@oxc-project/*"
   - oxlint
-  - '@oxlint/*'
+  - "@oxlint/*"
   - oxfmt
-  - '@oxfmt/*'
+  - "@oxfmt/*"
   - oxlint-tsgolint
-  - '@oxlint-tsgolint/*'
+  - "@oxlint-tsgolint/*"
   - vitest
-  - '@vitest/*'
+  - "@vitest/*"
   - tinybench
   - yuku-core
   - yuku-parser
-  - '@yuku-core/*'
-  - '@yuku-toolchain/*'
-  - '@voidzero-dev/vite-plus-core@1.1.0'
-  - '@voidzero-dev/vite-plus-darwin-arm64@1.1.0'
-  - '@voidzero-dev/vite-plus-darwin-x64@1.1.0'
-  - '@voidzero-dev/vite-plus-linux-arm64-gnu@1.1.0'
-  - '@voidzero-dev/vite-plus-linux-arm64-musl@1.1.0'
-  - '@voidzero-dev/vite-plus-linux-x64-gnu@1.1.0'
-  - '@voidzero-dev/vite-plus-linux-x64-musl@1.1.0'
-  - '@voidzero-dev/vite-plus-win32-arm64-msvc@1.1.0'
-  - '@voidzero-dev/vite-plus-win32-x64-msvc@1.1.0'
+  - "@yuku-core/*"
+  - "@yuku-toolchain/*"
+  - "@voidzero-dev/vite-plus-core@1.1.0"
+  - "@voidzero-dev/vite-plus-darwin-arm64@1.1.0"
+  - "@voidzero-dev/vite-plus-darwin-x64@1.1.0"
+  - "@voidzero-dev/vite-plus-linux-arm64-gnu@1.1.0"
+  - "@voidzero-dev/vite-plus-linux-arm64-musl@1.1.0"
+  - "@voidzero-dev/vite-plus-linux-x64-gnu@1.1.0"
+  - "@voidzero-dev/vite-plus-linux-x64-musl@1.1.0"
+  - "@voidzero-dev/vite-plus-win32-arm64-msvc@1.1.0"
+  - "@voidzero-dev/vite-plus-win32-x64-msvc@1.1.0"
   - vite-plus@1.1.0
+catalog:
+  vite: npm:@voidzero-dev/vite-plus-core@0.0.0-commit.943ee4a9e322a7ad4b1b4113f844cd541a10b159
+  vite-plus: 0.0.0-commit.943ee4a9e322a7ad4b1b4113f844cd541a10b159
+overrides:
+  vite@*: "catalog:"
+peerDependencyRules:
+  allowAny:
+    - vite
+  allowedVersions:
+    vite: "*"
