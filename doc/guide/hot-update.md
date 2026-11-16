@@ -4,10 +4,10 @@
 
 模板内置两套并存的更新方案：
 
-| 方案 | 通道 | 适用场景 |
-| --- | --- | --- |
-| 整包更新（electron-updater） | `invoke('app:checkUpdate')` → `update:msg` 事件 | 大版本升级、涉及 Electron 本体 |
-| 增量热更新 | `invoke('updater:start')` → `update:hotStatus` 事件 | 渲染层与主进程 JS 内容的快速迭代 |
+| 方案                         | 通道                                                | 适用场景                         |
+| ---------------------------- | --------------------------------------------------- | -------------------------------- |
+| 整包更新（electron-updater） | `invoke('app:checkUpdate')` → `update:msg` 事件     | 大版本升级、涉及 Electron 本体   |
+| 增量热更新                   | `invoke('updater:start')` → `update:hotStatus` 事件 | 渲染层与主进程 JS 内容的快速迭代 |
 
 ## 增量热更新的工作原理
 
@@ -19,30 +19,34 @@
 
 在 `apps/desktop/config/index.ts` 的 `build` 对象中：
 
-| 参数 | 说明 |
-| --- | --- |
-| `hotPublishUrl` | 资源托管的完整 URL（如 `https://www.example.com`），留空表示不启用 |
-| `hotPublishConfigName` | 配置文件名，拼在 URL 后，如 `update-config` |
+| 参数                   | 说明                                                               |
+| ---------------------- | ------------------------------------------------------------------ |
+| `hotPublishUrl`        | 资源托管的完整 URL（如 `https://www.example.com`），留空表示不启用 |
+| `hotPublishConfigName` | 配置文件名，拼在 URL 后，如 `update-config`                        |
 
 最终检查地址为 `hotPublishUrl + '/' + hotPublishConfigName + '.json'`，发布前可以先在浏览器访问确认可用。
 
 ## 渲染端调用
 
 ```ts
-import { invoke, vueListen } from '@renderer/utils/ipcRenderer'
+import { invoke, vueListen } from "@renderer/utils/ipcRenderer";
 
 // 触发热更新
-invoke('updater:start')
+invoke("updater:start");
 
 // 监听状态
-vueListen('update:hotStatus', (msg) => {
+vueListen("update:hotStatus", (msg) => {
   switch (msg.status) {
-    case 'downloading': /* 正在下载 */ break
-    case 'moving':      /* 正在移动文件 */ break
-    case 'finished':    /* 完成，提示用户重启 */ break
-    case 'failed':      /* msg.message 为原因 */ break
+    case "downloading":
+      /* 正在下载 */ break;
+    case "moving":
+      /* 正在移动文件 */ break;
+    case "finished":
+      /* 完成，提示用户重启 */ break;
+    case "failed":
+      /* msg.message 为原因 */ break;
   }
-})
+});
 ```
 
 ## 版本与字节码纪律

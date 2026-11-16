@@ -8,82 +8,82 @@
 /** 浏览器演示窗口 */
 export interface BrowserContract {
   /** 打开浏览器演示窗口 */
-  openDemoWindow(): void
+  openDemoWindow(): void;
   /** 获取最后一个拖拽的浏览器标签数据 */
-  getLastDraggedTabData(): LastDraggedTabData
+  getLastDraggedTabData(): LastDraggedTabData;
   /** 添加默认的 BrowserView */
-  addDefaultView(): AddDefaultViewResult
+  addDefaultView(): AddDefaultViewResult;
   /** 选择浏览器标签 */
-  selectTab(browserContentViewWebContentsId: number): boolean
+  selectTab(browserContentViewWebContentsId: number): boolean;
   /** 销毁浏览器标签 */
-  destroyTab(browserContentViewWebContentsId: number): void
+  destroyTab(browserContentViewWebContentsId: number): void;
   /** 浏览器标签跳转到指定 URL */
-  jumpToUrl(args: JumpToUrlArgs): void
+  jumpToUrl(args: JumpToUrlArgs): void;
   /** 标签鼠标按下事件 */
-  mousedown(args: MouseDownArgs): void
+  mousedown(args: MouseDownArgs): void;
   /** 标签鼠标移动事件（拖拽中） */
-  mousemove(args: MouseMoveArgs): void
+  mousemove(args: MouseMoveArgs): void;
   /** 标签鼠标抬起事件（拖拽结束） */
-  mouseup(): void
+  mouseup(): void;
 }
 
 /** getLastDraggedTabData 的返回值：最后一个拖拽的浏览器标签数据 */
 export interface LastDraggedTabData {
-  positionX: number
-  browserContentViewWebContentsId: number
-  title: string
-  url: string
+  positionX: number;
+  browserContentViewWebContentsId: number;
+  title: string;
+  url: string;
 }
 
 /** addDefaultView 的返回值 */
 export interface AddDefaultViewResult {
-  browserContentViewWebContentsId: number
+  browserContentViewWebContentsId: number;
 }
 
 /** jumpToUrl 的载荷 */
 export interface JumpToUrlArgs {
-  browserContentViewWebContentsId: number
-  url: string
+  browserContentViewWebContentsId: number;
+  url: string;
 }
 
 /** mousedown 的载荷 */
 export interface MouseDownArgs {
-  offsetX: number
+  offsetX: number;
 }
 
 /** mousemove 的载荷 */
 export interface MouseMoveArgs {
   /** 鼠标在显示器的x坐标 */
-  screenX: number
+  screenX: number;
   /** 鼠标在显示器的y坐标 */
-  screenY: number
+  screenY: number;
   /** 按下鼠标时在窗口的x坐标 */
-  startX: number
+  startX: number;
   /** 按下鼠标时在窗口的y坐标 */
-  startY: number
-  browserContentViewWebContentsId: number
+  startY: number;
+  browserContentViewWebContentsId: number;
 }
 
 /** tabDataUpdate 事件的载荷 */
 export interface TabDataUpdatePayload {
-  browserContentViewWebContentsId: number
-  title: string
-  url: string
+  browserContentViewWebContentsId: number;
+  title: string;
+  url: string;
   /** 1 添加/更新 -1 删除 */
-  status: 1 | -1
+  status: 1 | -1;
 }
 
 /** tabPositionXUpdate 事件的载荷 */
 export interface TabPositionXUpdatePayload {
-  dragTabOffsetX: number
-  positionX: number
-  browserContentViewWebContentsId: number
+  dragTabOffsetX: number;
+  positionX: number;
+  browserContentViewWebContentsId: number;
 }
 
 /** 浏览器演示窗口事件推送 */
 export interface BrowserEvents {
-  tabDataUpdate(payload: TabDataUpdatePayload): void
-  tabPositionXUpdate(payload: TabPositionXUpdatePayload): void
+  tabDataUpdate(payload: TabDataUpdatePayload): void;
+  tabPositionXUpdate(payload: TabPositionXUpdatePayload): void;
   /** 标签拖拽结束，通知标签栏重置状态 */
-  dragEnd(): void
+  dragEnd(): void;
 }

@@ -11,8 +11,8 @@ import type {
   UpdaterContract,
   UpdateEvents,
   WindowEvents,
-} from 'ipc-contract'
-import { onUnmounted } from 'vue'
+} from "ipc-contract";
+import { onUnmounted } from "vue";
 
 /**
  * 渲染进程的 IPC 客户端层。
@@ -31,38 +31,35 @@ import { onUnmounted } from 'vue'
 // ---------------------------------------------------------------------------
 
 /** 把合同方法（主进程 handler 视角，返回原始值）映射为渲染端的 Promise 版签名 */
-type BridgeMethod<F> = F extends (...args: infer A) => infer R
-  ? (...args: A) => Promise<R>
-  : never
+type BridgeMethod<F> = F extends (...args: infer A) => infer R ? (...args: A) => Promise<R> : never;
 
 /**
  * 域桥视图：逐方法同形映射。
  * 同形映射会保留合同接口成员的 JSDoc（含 @deprecated 与参数文档），
  * IDE 悬停 `ipc.域.方法` 时直接透出 contract.ts 里的说明。
  */
-type Bridge<T> = { [K in keyof T]: BridgeMethod<T[K]> }
+type Bridge<T> = { [K in keyof T]: BridgeMethod<T[K]> };
 
 /** 事件组桥视图：把事件方法映射为「注册回调 -> 返回清理函数」 */
-type EventBridge<T> = { [K in keyof T]: (callback: T[K]) => () => void }
+type EventBridge<T> = { [K in keyof T]: (callback: T[K]) => () => void };
 
 function createBridge<T extends object>(domain: string): Bridge<T> {
   return new Proxy({} as Bridge<T>, {
     get(_target, method) {
-      if (typeof method !== 'string') return undefined
-      return (...args: unknown[]) =>
-        window.ipcBridge.invoke(`${domain}:${method}`, ...args)
+      if (typeof method !== "string") return undefined;
+      return (...args: unknown[]) => window.ipcBridge.invoke(`${domain}:${method}`, ...args);
     },
-  })
+  });
 }
 
 function createEventBridge<T extends object>(group: string): EventBridge<T> {
   return new Proxy({} as EventBridge<T>, {
     get(_target, method) {
-      if (typeof method !== 'string') return undefined
+      if (typeof method !== "string") return undefined;
       return (callback: (...args: unknown[]) => void) =>
-        window.ipcBridge.on(`${group}:${method}`, callback)
+        window.ipcBridge.on(`${group}:${method}`, callback);
     },
-  })
+  });
 }
 
 /**
@@ -76,14 +73,14 @@ function createEventBridge<T extends object>(group: string): EventBridge<T> {
  */
 export const ipc = {
   /** 应用基础功能 */
-  app: createBridge<AppContract>('app'),
+  app: createBridge<AppContract>("app"),
   /** 浏览器演示窗口 */
-  browser: createBridge<BrowserContract>('browser'),
+  browser: createBridge<BrowserContract>("browser"),
   /** 打印演示窗口 */
-  print: createBridge<PrintContract>('print'),
+  print: createBridge<PrintContract>("print"),
   /** 热更新（增量更新） */
-  updater: createBridge<UpdaterContract>('updater'),
-}
+  updater: createBridge<UpdaterContract>("updater"),
+};
 
 /**
  * 主进程 -> 渲染进程的类型化事件桥：`ipcEvents.组.事件(回调)`。
@@ -94,14 +91,14 @@ export const ipc = {
  */
 export const ipcEvents = {
   /** 文件下载事件推送 */
-  download: createEventBridge<DownloadEvents>('download'),
+  download: createEventBridge<DownloadEvents>("download"),
   /** 更新事件推送（整包 electron-updater 与增量热更新共用） */
-  update: createEventBridge<UpdateEvents>('update'),
+  update: createEventBridge<UpdateEvents>("update"),
   /** 浏览器演示窗口事件推送 */
-  browser: createEventBridge<BrowserEvents>('browser'),
+  browser: createEventBridge<BrowserEvents>("browser"),
   /** 窗口事件推送 */
-  window: createEventBridge<WindowEvents>('window'),
-}
+  window: createEventBridge<WindowEvents>("window"),
+};
 
 /**
  * ipcEvents 的 Vue setup 版本：注册一个随组件卸载自动清理的事件监听。
@@ -115,8 +112,8 @@ export function onIpcEvent<F extends (...args: never[]) => unknown>(
   register: (callback: F) => () => void,
   callback: F,
 ): void {
-  const dispose = register(callback)
-  onUnmounted(dispose)
+  const dispose = register(callback);
+  onUnmounted(dispose);
 }
 
 // ---------------------------------------------------------------------------
@@ -139,9 +136,7 @@ export function invoke<C extends IpcContractChannel>(
   ...args: Parameters<ResolveContractMethod<C>>
 ): Promise<ReturnType<ResolveContractMethod<C>>> {
   // 跨越 contextBridge 后类型被抹平为 unknown，由合同解析类型在边界处恢复
-  return window.ipcBridge.invoke(channel, ...args) as Promise<
-    ReturnType<ResolveContractMethod<C>>
-  >
+  return window.ipcBridge.invoke(channel, ...args) as Promise<ReturnType<ResolveContractMethod<C>>>;
 }
 
 /**
@@ -155,7 +150,7 @@ export function listen<C extends IpcEventChannel>(
   channel: C,
   callback: ResolveEventMethod<C>,
 ): () => void {
-  return window.ipcBridge.on(channel, callback as (...args: unknown[]) => void)
+  return window.ipcBridge.on(channel, callback as (...args: unknown[]) => void);
 }
 
 /**
@@ -168,6 +163,6 @@ export function vueListen<C extends IpcEventChannel>(
   channel: C,
   callback: ResolveEventMethod<C>,
 ): void {
-  const dispose = listen(channel, callback)
-  onUnmounted(dispose)
+  const dispose = listen(channel, callback);
+  onUnmounted(dispose);
 }

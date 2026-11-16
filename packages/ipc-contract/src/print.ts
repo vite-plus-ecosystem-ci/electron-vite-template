@@ -8,15 +8,15 @@
 /** 打印演示窗口 */
 export interface PrintContract {
   /** 获取打印机列表 */
-  getPrinters(): Electron.PrinterInfo[]
+  getPrinters(): Electron.PrinterInfo[];
   /** 执行打印操作 */
-  exec(options: Electron.WebContentsPrintOptions): PrintExecResult
+  exec(options: Electron.WebContentsPrintOptions): PrintExecResult;
   /** 打开打印演示窗口 */
-  openDemoWindow(): void
+  openDemoWindow(): void;
 }
 
 /** exec 的返回值 */
 export interface PrintExecResult {
-  success: boolean
-  failureReason: string
+  success: boolean;
+  failureReason: string;
 }

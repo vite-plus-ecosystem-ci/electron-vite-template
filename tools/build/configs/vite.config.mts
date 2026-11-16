@@ -28,9 +28,7 @@ export default defineConfig({
   base: "./",
   build: {
     outDir:
-      config && config.target
-        ? join(appRoot, "dist/web")
-        : join(appRoot, "dist/electron/renderer"),
+      config && config.target ? join(appRoot, "dist/web") : join(appRoot, "dist/electron/renderer"),
     emptyOutDir: true,
     target: "esnext",
     cssCodeSplit: false,

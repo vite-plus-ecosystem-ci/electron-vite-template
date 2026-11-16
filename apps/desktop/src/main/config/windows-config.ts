@@ -1,6 +1,6 @@
-import { IsUseSysTitle } from './const'
-import { preloadPath } from './static-path'
-import { BrowserWindowConstructorOptions } from 'electron'
+import { IsUseSysTitle } from "./const";
+import { preloadPath } from "./static-path";
+import { BrowserWindowConstructorOptions } from "electron";
 
 /**
  * 安全基线：contextIsolation + sandbox 开启、nodeIntegration 关闭，
@@ -20,11 +20,11 @@ export const mainWindowConfig: BrowserWindowConstructorOptions = {
     preload: preloadPath,
     webSecurity: false,
     // 如果是开发模式可以使用devTools
-    devTools: process.env.NODE_ENV === 'development',
+    devTools: process.env.NODE_ENV === "development",
     // 在macos中启用橡皮动画
-    scrollBounce: process.platform === 'darwin',
+    scrollBounce: process.platform === "darwin",
   },
-}
+};
 
 export const otherWindowConfig: BrowserWindowConstructorOptions = {
   height: 595,
@@ -41,8 +41,8 @@ export const otherWindowConfig: BrowserWindowConstructorOptions = {
     preload: preloadPath,
     webSecurity: false,
     // 如果是开发模式可以使用devTools
-    devTools: process.env.NODE_ENV === 'development',
+    devTools: process.env.NODE_ENV === "development",
     // 在macos中启用橡皮动画
-    scrollBounce: process.platform === 'darwin',
+    scrollBounce: process.platform === "darwin",
   },
-}
+};

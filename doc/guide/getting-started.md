@@ -29,16 +29,16 @@ pnpm dev
 
 所有命令在仓库根目录执行：
 
-| 命令 | 说明 |
-| --- | --- |
-| `pnpm dev` | 启动开发环境 |
-| `pnpm run build` | 构建 + 打出当前平台的完整安装包 |
-| `pnpm run build:dir` | 构建 + 仅产出免安装目录（不生成安装器，验证打包首选） |
-| `pnpm run build:win64` / `build:mac` | 构建并打出指定平台安装包 |
-| `pnpm run build:web` | 仅构建渲染层为纯 Web 版本（产物在 `apps/desktop/dist/web`） |
-| `pnpm run build:clean` | 清理全部构建产物 |
-| `pnpm run pack:resources` | 打包热更新资源（见[热更新](/guide/hot-update)） |
-| `pnpm --filter docs dev` | 本地预览本文档站 |
+| 命令                                 | 说明                                                        |
+| ------------------------------------ | ----------------------------------------------------------- |
+| `pnpm dev`                           | 启动开发环境                                                |
+| `pnpm run build`                     | 构建 + 打出当前平台的完整安装包                             |
+| `pnpm run build:dir`                 | 构建 + 仅产出免安装目录（不生成安装器，验证打包首选）       |
+| `pnpm run build:win64` / `build:mac` | 构建并打出指定平台安装包                                    |
+| `pnpm run build:web`                 | 仅构建渲染层为纯 Web 版本（产物在 `apps/desktop/dist/web`） |
+| `pnpm run build:clean`               | 清理全部构建产物                                            |
+| `pnpm run pack:resources`            | 打包热更新资源（见[热更新](/guide/hot-update)）             |
+| `pnpm --filter docs dev`             | 本地预览本文档站                                            |
 
 ## 环境变量
 
@@ -51,15 +51,15 @@ pnpm dev -m sit     # 开发脚本支持 -m 时使用 env/.sit.env
 
 构建侧的配置读取自 `apps/desktop/config/index.ts`：
 
-| 参数 | 默认值 | 说明 |
-| --- | --- | --- |
-| `build.hotPublishUrl` | `''` | 热更新资源托管的完整 URL（见[热更新](/guide/hot-update)） |
-| `build.hotPublishConfigName` | `'update-config'` | 热更新配置文件名 |
-| `dev.removeElectronJunk` | `true` | 过滤 Electron 原生日志噪音 |
-| `dev.chineseLog` | `false` | 控制台部分输出中文化 |
-| `dev.port` | `9080` | 开发服务器端口（被占用时自动顺延） |
-| `IsUseSysTitle` | `false` | 是否使用系统标题栏（影响自定义标题栏） |
-| `HotUpdateFolder` | `'update'` | 增量更新解包目录名 |
+| 参数                         | 默认值            | 说明                                                      |
+| ---------------------------- | ----------------- | --------------------------------------------------------- |
+| `build.hotPublishUrl`        | `''`              | 热更新资源托管的完整 URL（见[热更新](/guide/hot-update)） |
+| `build.hotPublishConfigName` | `'update-config'` | 热更新配置文件名                                          |
+| `dev.removeElectronJunk`     | `true`            | 过滤 Electron 原生日志噪音                                |
+| `dev.chineseLog`             | `false`           | 控制台部分输出中文化                                      |
+| `dev.port`                   | `9080`            | 开发服务器端口（被占用时自动顺延）                        |
+| `IsUseSysTitle`              | `false`           | 是否使用系统标题栏（影响自定义标题栏）                    |
+| `HotUpdateFolder`            | `'update'`        | 增量更新解包目录名                                        |
 
 ## 下一步
 

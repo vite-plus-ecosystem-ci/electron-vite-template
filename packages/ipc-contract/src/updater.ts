@@ -5,48 +5,48 @@
  * 对应主进程实现：@main/services/hot-updater（增量）与 ipc-main-handle（整包 electron-updater）
  */
 
-import type { ProgressInfo } from 'electron-updater'
+import type { ProgressInfo } from "electron-updater";
 
 /** 热更新（增量更新） */
 export interface UpdaterContract {
   /** 执行热更新 */
-  start(): void
+  start(): void;
   /** 热更新测试（仅用于测试） */
-  test(): void
+  test(): void;
 }
 
 /** msg 事件的载荷（整包 electron-updater 推送） */
 export interface UpdateMsgPayload {
-  state: number
-  msg: string | ProgressInfo
+  state: number;
+  msg: string | ProgressInfo;
 }
 
 /** processStatus 事件的状态枚举 */
 export type UpdateProcessStatus =
-  | 'init'
-  | 'downloading'
-  | 'moving'
-  | 'finished'
-  | 'failed'
-  | 'download'
+  | "init"
+  | "downloading"
+  | "moving"
+  | "finished"
+  | "failed"
+  | "download";
 
 /** processStatus 事件的载荷 */
 export interface UpdateProcessStatusPayload {
-  status: UpdateProcessStatus
-  message: string
+  status: UpdateProcessStatus;
+  message: string;
 }
 
 /** hotStatus 事件的载荷（增量热更新推送） */
 export interface HotStatusPayload {
-  status: string
-  message: string
+  status: string;
+  message: string;
 }
 
 /** 更新事件推送（整包 electron-updater 与增量热更新共用） */
 export interface UpdateEvents {
   /** electron-updater 的更新进度推送 */
-  msg(payload: UpdateMsgPayload): void
-  processStatus(payload: UpdateProcessStatusPayload): void
+  msg(payload: UpdateMsgPayload): void;
+  processStatus(payload: UpdateProcessStatusPayload): void;
   /** 增量热更新的状态推送 */
-  hotStatus(payload: HotStatusPayload): void
+  hotStatus(payload: HotStatusPayload): void;
 }

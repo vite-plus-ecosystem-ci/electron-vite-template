@@ -2,12 +2,12 @@
 
 `.github/workflows/` 下共四个 GitHub Actions 工作流，全部基于 **pnpm + Node 24**（`pnpm/action-setup` 版本自动读取根 `package.json` 的 `packageManager` 字段；`--frozen-lockfile` 保证 CI 与本地依赖树一致）。
 
-| 工作流 | 触发 | Runner | 做什么 |
-| --- | --- | --- | --- |
-| `Build.yml`（Build TEST） | push / PR → main | windows-latest | 完整构建 + 打包，作为合入前的冒烟验证 |
-| `Test.yml` | push → main | windows / macOS / Ubuntu 三平台矩阵 | 三平台构建可用性验证 |
-| `release.yml` | push tag `v*` | 三平台矩阵 | 完整构建 + 打安装包，把 `apps/desktop/build/` 下的 `.exe` / `.dmg` / `.AppImage` / `.deb` 附到 GitHub Release |
-| `Build Update.yml`（已退役） | release 发布 | windows-latest | 原用于把热更资源部署到 gh-pages；gh-pages 已转作文档站，该工作流已删除 |
+| 工作流                       | 触发             | Runner                              | 做什么                                                                                                        |
+| ---------------------------- | ---------------- | ----------------------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `Build.yml`（Build TEST）    | push / PR → main | windows-latest                      | 完整构建 + 打包，作为合入前的冒烟验证                                                                         |
+| `Test.yml`                   | push → main      | windows / macOS / Ubuntu 三平台矩阵 | 三平台构建可用性验证                                                                                          |
+| `release.yml`                | push tag `v*`    | 三平台矩阵                          | 完整构建 + 打安装包，把 `apps/desktop/build/` 下的 `.exe` / `.dmg` / `.AppImage` / `.deb` 附到 GitHub Release |
+| `Build Update.yml`（已退役） | release 发布     | windows-latest                      | 原用于把热更资源部署到 gh-pages；gh-pages 已转作文档站，该工作流已删除                                        |
 
 ## 关键实现细节
 

@@ -17,13 +17,13 @@ webPreferences: {
 
 `apps/desktop/src/preload/index.ts` 通过 `contextBridge.exposeInMainWorld('ipcBridge', ...)` 暴露唯一的全局对象：
 
-| 成员 | 说明 |
-| --- | --- |
-| `invoke(channel, ...args)` | 渲染 → 主进程请求。通道需匹配 `域:方法` 格式且域在白名单内，否则抛错 |
-| `on(channel, callback)` | 监听主进程事件，回调直接收到载荷（不含 `IpcRendererEvent`），返回清理函数 |
-| `shell.openPath / openExternal` | 最小化的 shell 能力放行 |
-| `systemInfo / processInfo` | 只读的系统与构建环境信息（冻结对象） |
-| `simulateCrash()` | 模拟渲染进程崩溃（仅演示用） |
+| 成员                            | 说明                                                                      |
+| ------------------------------- | ------------------------------------------------------------------------- |
+| `invoke(channel, ...args)`      | 渲染 → 主进程请求。通道需匹配 `域:方法` 格式且域在白名单内，否则抛错      |
+| `on(channel, callback)`         | 监听主进程事件，回调直接收到载荷（不含 `IpcRendererEvent`），返回清理函数 |
+| `shell.openPath / openExternal` | 最小化的 shell 能力放行                                                   |
+| `systemInfo / processInfo`      | 只读的系统与构建环境信息（冻结对象）                                      |
+| `simulateCrash()`               | 模拟渲染进程崩溃（仅演示用）                                              |
 
 渲染层代码**不应直接触碰 `window.ipcBridge`**，而是使用类型化封装（`@renderer/utils/ipcRenderer` 的 `invoke` / `listen` / `vueListen`）——它把合同类型在桥接边界还原，通道名的合法性与载荷形状由编译期保证，运行时再由 preload 做第二道校验。
 

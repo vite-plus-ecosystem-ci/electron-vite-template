@@ -1,4 +1,4 @@
-import type { IpcEventGroups, IpcEventSender } from 'ipc-contract'
+import type { IpcEventGroups, IpcEventSender } from "ipc-contract";
 
 /**
  * 主进程向渲染进程推送事件的类型化入口。
@@ -16,11 +16,11 @@ export const webContentSend: IpcEventSender<IpcEventGroups> = new Proxy(
         {
           get(_target2, method: string) {
             return (webContents: Electron.WebContents, ...args: unknown[]) => {
-              webContents.send(`${group}:${method}`, ...args)
-            }
+              webContents.send(`${group}:${method}`, ...args);
+            };
           },
         },
-      )
+      );
     },
   },
-)
+);
