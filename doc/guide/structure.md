@@ -45,9 +45,9 @@
 
 ## 产物去向
 
-| 命令 | 产物路径 |
-| --- | --- |
-| `pnpm run build` / `build:dir` | `apps/desktop/dist/electron/`（主进程+preload+渲染层） |
-| 完整安装包 / 免安装目录 | `apps/desktop/build/`（electron-builder 输出，已 gitignore） |
-| `pnpm run build:web` | `apps/desktop/dist/web/` |
-| `pnpm run pack:resources` | `apps/desktop/build/update/`（热更新 zip + 配置 json） |
+| 命令                           | 产物路径                                                     |
+| ------------------------------ | ------------------------------------------------------------ |
+| `pnpm run build` / `build:dir` | `apps/desktop/dist/electron/`（主进程+preload+渲染层）       |
+| 完整安装包 / 免安装目录        | `apps/desktop/build/`（electron-builder 输出，已 gitignore） |
+| `pnpm run build:web`           | `apps/desktop/dist/web/`                                     |
+| `pnpm run pack:resources`      | `apps/desktop/build/update/`（热更新 zip + 配置 json）       |

@@ -2,13 +2,7 @@
   "editor.defaultFormatter": "oxc.vscode-oxc",
   "editor.formatOnSave": true,
   "npm.packageManager": "npm",
-  "eslint.validate": [
-    "javascript",
-    "javascriptreact",
-    "typescript",
-    "typescriptreact",
-    "vue"
-  ],
+  "eslint.validate": ["javascript", "javascriptreact", "typescript", "typescriptreact", "vue"],
   "files.exclude": {
     "**/node_modules": true
   },

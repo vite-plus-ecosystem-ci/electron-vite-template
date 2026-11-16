@@ -8,31 +8,28 @@
  *
  * 通道命名与白名单来自 ipc-contract 包 contract.ts 的域定义，两边需保持一致。
  */
-import { contextBridge, ipcRenderer, shell } from 'electron'
+import { contextBridge, ipcRenderer, shell } from "electron";
 
 /** invoke 通道的合法域（对应 IpcContracts 的四个域） */
-const INVOKE_DOMAINS = new Set(['app', 'browser', 'print', 'updater'])
+const INVOKE_DOMAINS = new Set(["app", "browser", "print", "updater"]);
 /** 事件通道的合法组（对应 IpcEventGroups 的四个组） */
-const EVENT_GROUPS = new Set(['download', 'update', 'browser', 'window'])
+const EVENT_GROUPS = new Set(["download", "update", "browser", "window"]);
 
-function assertChannel(
-  channel: unknown,
-  domains: Set<string>,
-): asserts channel is string {
+function assertChannel(channel: unknown, domains: Set<string>): asserts channel is string {
   if (
-    typeof channel !== 'string' ||
-    !domains.has(channel.split(':')[0]) ||
+    typeof channel !== "string" ||
+    !domains.has(channel.split(":")[0]) ||
     !/^[a-z]+:[a-zA-Z][a-zA-Z0-9]*$/.test(channel)
   ) {
-    throw new Error(`非法 IPC 通道: ${String(channel)}`)
+    throw new Error(`非法 IPC 通道: ${String(channel)}`);
   }
 }
 
 const ipcBridge = {
   /** 渲染进程 -> 主进程的请求，载荷与返回值由渲染端 invoke 封装提供类型 */
   invoke(channel: string, ...args: unknown[]): Promise<unknown> {
-    assertChannel(channel, INVOKE_DOMAINS)
-    return ipcRenderer.invoke(channel, ...args)
+    assertChannel(channel, INVOKE_DOMAINS);
+    return ipcRenderer.invoke(channel, ...args);
   },
 
   /**
@@ -40,23 +37,23 @@ const ipcBridge = {
    * 返回清理函数。
    */
   on(channel: string, callback: (...args: unknown[]) => void): () => void {
-    assertChannel(channel, EVENT_GROUPS)
+    assertChannel(channel, EVENT_GROUPS);
     const listener = (_event: Electron.IpcRendererEvent, ...args: unknown[]) => {
-      callback(...args)
-    }
-    ipcRenderer.on(channel, listener)
+      callback(...args);
+    };
+    ipcRenderer.on(channel, listener);
     return () => {
-      ipcRenderer.removeListener(channel, listener)
-    }
+      ipcRenderer.removeListener(channel, listener);
+    };
   },
 
   /** 放行最小化的 shell 能力 */
   shell: {
     openPath(path: string): Promise<string> {
-      return shell.openPath(path)
+      return shell.openPath(path);
     },
     openExternal(url: string): Promise<void> {
-      return shell.openExternal(url)
+      return shell.openExternal(url);
     },
   },
 
@@ -64,23 +61,23 @@ const ipcBridge = {
   systemInfo: Object.freeze({
     platform: process.platform,
     arch: process.arch,
-    electronVersion: process.versions.electron ?? '',
-    nodeVersion: process.versions.node ?? '',
-    systemVersion: process.getSystemVersion?.() ?? '',
+    electronVersion: process.versions.electron ?? "",
+    nodeVersion: process.versions.node ?? "",
+    systemVersion: process.getSystemVersion?.() ?? "",
   }),
 
   /** 只读的构建/运行环境信息 */
   processInfo: Object.freeze({
     platform: process.platform,
-    buildTarget: process.env.BUILD_TARGET ?? '',
+    buildTarget: process.env.BUILD_TARGET ?? "",
   }),
 
   /** 模拟渲染进程崩溃（仅演示用） */
   simulateCrash(): void {
-    process.crash()
+    process.crash();
   },
-}
+};
 
-export type IpcBridge = typeof ipcBridge
+export type IpcBridge = typeof ipcBridge;
 
-contextBridge.exposeInMainWorld('ipcBridge', ipcBridge)
+contextBridge.exposeInMainWorld("ipcBridge", ipcBridge);

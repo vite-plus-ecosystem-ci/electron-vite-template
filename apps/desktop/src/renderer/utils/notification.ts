@@ -1,10 +1,10 @@
 interface DesktopMsgProps {
   /** 标题 */
-  title: string
+  title: string;
   /** 正文 */
-  body: string
+  body: string;
   /** ICON */
-  icon?: string
+  icon?: string;
 }
 
 /**
@@ -20,10 +20,10 @@ interface DesktopMsgProps {
  **/
 
 export function DesktopMsg(option: DesktopMsgProps): Promise<boolean> {
-  const msgfunc = new window.Notification(option.title, option)
+  const msgfunc = new window.Notification(option.title, option);
   return new Promise((resolve) => {
     msgfunc.onclick = () => {
-      resolve(true)
-    }
-  })
+      resolve(true);
+    };
+  });
 }

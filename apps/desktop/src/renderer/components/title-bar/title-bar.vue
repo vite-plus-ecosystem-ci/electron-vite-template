@@ -2,10 +2,7 @@
   <div class="window-title" v-if="!IsUseSysTitle && isNotMac && !IsWeb">
     <!-- 软件logo预留位置 -->
     <div style="-webkit-app-region: drag" class="logo">
-      <img
-        src="@renderer/assets/icons/svg/electron-logo.svg"
-        class="icon-logo"
-      />
+      <img src="@renderer/assets/icons/svg/electron-logo.svg" class="icon-logo" />
     </div>
     <!-- 菜单栏位置 -->
     <div></div>
@@ -16,14 +13,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { ipc } from '@renderer/utils/ipcRenderer'
-const IsUseSysTitle = ref(false)
-const isNotMac = ref(window.ipcBridge.processInfo.platform !== 'darwin')
-const IsWeb = ref(window.ipcBridge.processInfo.buildTarget)
+import { ref } from "vue";
+import { ipc } from "@renderer/utils/ipcRenderer";
+const IsUseSysTitle = ref(false);
+const isNotMac = ref(window.ipcBridge.processInfo.platform !== "darwin");
+const IsWeb = ref(window.ipcBridge.processInfo.buildTarget);
 ipc.app.isUseSysTitle().then((res) => {
-  IsUseSysTitle.value = res
-})
+  IsUseSysTitle.value = res;
+});
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>

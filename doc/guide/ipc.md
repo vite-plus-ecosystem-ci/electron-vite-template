@@ -6,12 +6,12 @@
 
 所有 invoke 通道按域分组，线上通道名就是 `域:方法`：
 
-| 域 | 通道示例 | 职责 |
-| --- | --- | --- |
-| `app:` | `app:openWin`、`app:quit`、`app:setStoreValue` | 应用基础功能 |
-| `browser:` | `browser:selectTab`、`browser:mousemove` | 浏览器演示窗口 |
-| `print:` | `print:getPrinters`、`print:exec` | 打印演示窗口 |
-| `updater:` | `updater:start`、`updater:test` | 增量热更新 |
+| 域         | 通道示例                                       | 职责           |
+| ---------- | ---------------------------------------------- | -------------- |
+| `app:`     | `app:openWin`、`app:quit`、`app:setStoreValue` | 应用基础功能   |
+| `browser:` | `browser:selectTab`、`browser:mousemove`       | 浏览器演示窗口 |
+| `print:`   | `print:getPrinters`、`print:exec`              | 打印演示窗口   |
+| `updater:` | `updater:start`、`updater:test`                | 增量热更新     |
 
 主进程向渲染进程的事件推送同样分组：`download:progress`、`update:msg`、`browser:dragEnd`、`window:sendData` 等。invoke 与 event 是两张独立的表（`IpcContracts` 与 `IpcEventGroups`），从命名空间上杜绝了同名通道双语义的混淆。
 
@@ -22,7 +22,7 @@
 ```ts
 export interface BrowserContract {
   /** 选择浏览器标签 */
-  selectTab(browserContentViewWebContentsId: number): boolean
+  selectTab(browserContentViewWebContentsId: number): boolean;
   // ...
 }
 ```
@@ -34,7 +34,7 @@ export const browserIpcHandlers: IpcImpl<BrowserContract> = {
   selectTab: async (event, browserContentViewWebContentsId) => {
     // event 与 id 均已推导
   },
-}
+};
 ```
 
 对象字面量受编译期穷尽检查：漏实现、多写、签名不符都是编译错误。渲染层若误调不存在的通道同样报错。
@@ -42,14 +42,16 @@ export const browserIpcHandlers: IpcImpl<BrowserContract> = {
 **渲染进程调用**（`apps/desktop/src/renderer/utils/ipcRenderer.ts`）：
 
 ```ts
-import { invoke, vueListen } from '@renderer/utils/ipcRenderer'
+import { invoke, vueListen } from "@renderer/utils/ipcRenderer";
 
 // 通道名自动补全、参数强校验、返回值带类型
-const printers = await invoke('print:getPrinters')
-await invoke('app:openWin', { url: '/form/index' })
+const printers = await invoke("print:getPrinters");
+await invoke("app:openWin", { url: "/form/index" });
 
 // 监听主进程推送，组件卸载自动清理
-vueListen('download:progress', (percent) => { /* percent: number */ })
+vueListen("download:progress", (percent) => {
+  /* percent: number */
+});
 ```
 
 底层通信经由 preload 暴露的 `window.ipcBridge`（见[安全模型](/guide/security)），渲染端封装负责把合同类型在桥接边界处还原。

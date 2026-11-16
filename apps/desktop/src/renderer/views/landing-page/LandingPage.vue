@@ -4,7 +4,7 @@
     <main>
       <div class="left-side">
         <span class="title">
-          {{ t('welcome') }}
+          {{ t("welcome") }}
         </span>
         <system-information></system-information>
       </div>
@@ -12,57 +12,57 @@
       <div class="right-side">
         <div class="doc">
           <div class="title alt">
-            {{ t('buttonTips') }}
+            {{ t("buttonTips") }}
           </div>
           <el-button type="primary" round @click="open()">
-            {{ t('buttons.console') }}
+            {{ t("buttons.console") }}
           </el-button>
           <el-button type="primary" round @click="CheckUpdate('one')">
-            {{ t('buttons.checkUpdate') }}
+            {{ t("buttons.checkUpdate") }}
           </el-button>
         </div>
         <div class="doc">
           <el-button type="primary" round @click="CheckUpdate('two')">
-            {{ t('buttons.checkUpdate2') }}
+            {{ t("buttons.checkUpdate2") }}
           </el-button>
           <el-button type="primary" round @click="CheckUpdate('three')">
-            {{ t('buttons.checkUpdateInc') }}
+            {{ t("buttons.checkUpdateInc") }}
           </el-button>
           <el-button type="primary" round @click="CheckUpdate('threetest')">
-            {{ t('buttons.incrementalUpdateTest') }}
+            {{ t("buttons.incrementalUpdateTest") }}
           </el-button>
 
           <el-button type="primary" round @click="CheckUpdate('four')">
-            {{ t('buttons.ForcedUpdate') }}
+            {{ t("buttons.ForcedUpdate") }}
           </el-button>
           <el-button type="primary" round @click="StartServer">
-            {{ t('buttons.startServer') }}
+            {{ t("buttons.startServer") }}
           </el-button>
           <el-button type="primary" round @click="StopServer">
-            {{ t('buttons.stopServer') }}
+            {{ t("buttons.stopServer") }}
           </el-button>
           <el-button type="primary" round @click="getMessage">
-            {{ t('buttons.viewMessage') }}
+            {{ t("buttons.viewMessage") }}
           </el-button>
           <el-button type="primary" round @click="crash">
-            {{ t('buttons.simulatedCrash') }}
+            {{ t("buttons.simulatedCrash") }}
           </el-button>
           <el-button type="primary" round @click="openPreloadWindow">
-            {{ t('buttons.openPreloadWindow') }}
+            {{ t("buttons.openPreloadWindow") }}
           </el-button>
         </div>
         <div class="doc">
           <el-button type="primary" round @click="openNewWin">
-            {{ t('buttons.openNewWindow') }}
+            {{ t("buttons.openNewWindow") }}
           </el-button>
           <el-button type="primary" round @click="changeLanguage">
-            {{ t('buttons.changeLanguage') }}
+            {{ t("buttons.changeLanguage") }}
           </el-button>
           <el-button type="primary" round @click="printDemo">
-            {{ t('buttons.printDemo') }}
+            {{ t("buttons.printDemo") }}
           </el-button>
           <el-button type="primary" round @click="browserDemo">
-            {{ t('buttons.browser') }}
+            {{ t("buttons.browser") }}
           </el-button>
           <el-button
             v-if="showInMyComputer !== 0"
@@ -71,30 +71,29 @@
             @click="setShowOnMyComputer"
           >
             {{
-              t(
-                showInMyComputer === 1
-                  ? 'buttons.hideOnMyComputer'
-                  : 'buttons.showOnMyComputer',
-              )
+              t(showInMyComputer === 1 ? "buttons.hideOnMyComputer" : "buttons.showOnMyComputer")
             }}
           </el-button>
           <el-card style="margin-top: 50px">
-
             <el-form-item :label="t('store.input.labels')">
-              <el-input style="width: 200px" :placeholder="t('store.input.placeholder')" v-model="storeInputValue"/>
+              <el-input
+                style="width: 200px"
+                :placeholder="t('store.input.placeholder')"
+                v-model="storeInputValue"
+              />
             </el-form-item>
 
             <el-form-item :label="t('store.operate')" label-position="top">
               <el-button color="#626aef" plain @click="setStoreValue">
-                {{ t('store.saveButton') }}
+                {{ t("store.saveButton") }}
               </el-button>
 
               <el-button color="#626aef" plain @click="getStoreValue">
-                {{ t('store.getButton') }}
+                {{ t("store.getButton") }}
               </el-button>
 
               <el-button color="#626aef" plain @click="deleteStoreValue">
-                {{ t('store.clearButton') }}
+                {{ t("store.clearButton") }}
               </el-button>
             </el-form-item>
 
@@ -138,124 +137,124 @@
 </template>
 
 <script setup lang="ts">
-import SystemInformation from './components/system-info-mation.vue'
+import SystemInformation from "./components/system-info-mation.vue";
 // import UpdateProgress from './updataProgress/index.vue'
-import { message } from '@renderer/api/login'
-import logo from '@renderer/assets/logo.png'
-import { ElMessage, ElMessageBox } from 'element-plus'
-import { Ref, ref } from 'vue'
-import { i18n, setLanguage } from '@renderer/i18n'
-import { useI18n } from 'vue-i18n'
-import { ipc, ipcEvents, onIpcEvent } from '../../utils/ipcRenderer'
+import { message } from "@renderer/api/login";
+import logo from "@renderer/assets/logo.png";
+import { ElMessage, ElMessageBox } from "element-plus";
+import { Ref, ref } from "vue";
+import { i18n, setLanguage } from "@renderer/i18n";
+import { useI18n } from "vue-i18n";
+import { ipc, ipcEvents, onIpcEvent } from "../../utils/ipcRenderer";
 
-import { useStoreTemplate } from '@renderer/store/modules/template'
-import { ProgressInfo } from 'electron-updater'
+import { useStoreTemplate } from "@renderer/store/modules/template";
+import { ProgressInfo } from "electron-updater";
 
-const storeTemplate = useStoreTemplate()
+const storeTemplate = useStoreTemplate();
 
-const { t } = useI18n()
+const { t } = useI18n();
 
-console.log(`storeTemplate`, storeTemplate.getTest)
-console.log(`storeTemplate`, storeTemplate.getTest1)
-console.log(`storeTemplate`, storeTemplate.$state.testData)
-console.log(__CONFIG__)
+console.log(`storeTemplate`, storeTemplate.getTest);
+console.log(`storeTemplate`, storeTemplate.getTest1);
+console.log(`storeTemplate`, storeTemplate.$state.testData);
+console.log(__CONFIG__);
 
 setTimeout(() => {
-  storeTemplate.TEST_ACTION('654321')
-  console.log(`storeTemplate`, storeTemplate.getTest1)
-}, 1000)
+  storeTemplate.TEST_ACTION("654321");
+  console.log(`storeTemplate`, storeTemplate.getTest1);
+}, 1000);
 
-const { shell } = window.ipcBridge
+const { shell } = window.ipcBridge;
 
-let percentage = ref(0)
+let percentage = ref(0);
 let colors: Ref<ColorInfo[]> | Ref<string> = ref([
-  { color: '#f56c6c', percentage: 20 },
-  { color: '#e6a23c', percentage: 40 },
-  { color: '#6f7ad3', percentage: 60 },
-  { color: '#1989fa', percentage: 80 },
-  { color: '#5cb87a', percentage: 100 },
-])
+  { color: "#f56c6c", percentage: 20 },
+  { color: "#e6a23c", percentage: 40 },
+  { color: "#6f7ad3", percentage: 60 },
+  { color: "#1989fa", percentage: 80 },
+  { color: "#5cb87a", percentage: 100 },
+]);
 
-let dialogVisible = ref(false)
-let progressStaus = ref<string | null>(null)
-let showForcedUpdate = ref(false)
-let filePath = ref('')
-let updateStatus = ref('')
+let dialogVisible = ref(false);
+let progressStaus = ref<string | null>(null);
+let showForcedUpdate = ref(false);
+let filePath = ref("");
+let updateStatus = ref("");
 
-let elPageSize = ref(100)
-let elCPage = ref(1)
+let elPageSize = ref(100);
+let elCPage = ref(1);
 
 ipc.app.getStaticPath().then((res) => {
-  console.log('staticPath', res)
-})
+  console.log("staticPath", res);
+});
 
 function changeLanguage() {
-  setLanguage(i18n.global.locale.value === 'zh-cn' ? 'en' : 'zh-cn')
+  setLanguage(i18n.global.locale.value === "zh-cn" ? "en" : "zh-cn");
 }
 
 function printDemo() {
-  ipc.print.openDemoWindow()
+  ipc.print.openDemoWindow();
 }
 
 function browserDemo() {
-  ipc.browser.openDemoWindow()
+  ipc.browser.openDemoWindow();
 }
 
 function handleSizeChange(val: number) {
-  elPageSize.value = val
+  elPageSize.value = val;
 }
 
 function handleCurrentChange(val: number) {
-  elCPage.value = val
+  elCPage.value = val;
 }
 
 function crash() {
-  window.ipcBridge.simulateCrash()
+  window.ipcBridge.simulateCrash();
 }
 
 function openNewWin() {
   let data = {
-    url: '/form/index',
-  }
-  ipc.app.openWin(data)
+    url: "/form/index",
+  };
+  ipc.app.openWin(data);
 }
 function getMessage() {
   message().then((res) => {
-    ElMessageBox.alert(res.data, '提示', {
-      confirmButtonText: '确定',
-    })
-  })
+    ElMessageBox.alert(res.data, "提示", {
+      confirmButtonText: "确定",
+    });
+  });
 }
 function StopServer() {
   ipc.app.stopServer().then((res) => {
     if (res) {
       ElMessage({
-        type: 'success',
-        message: '已关闭',
-      })
+        type: "success",
+        message: "已关闭",
+      });
     }
-  })
+  });
 }
 function StartServer() {
   ipc.app.startServer().then((res) => {
     if (res) {
       ElMessage({
-        type: 'success',
+        type: "success",
         message: res,
-      })
+      });
     }
-  })
+  });
 }
 // 获取electron方法
 function open() {}
 function CheckUpdate(data) {
   switch (data) {
-    case 'one':
-      ipc.app.checkUpdate()
-      break
-    case 'two':
+    case "one":
+      ipc.app.checkUpdate();
+      break;
+    case "two":
       // TODO 测试链接
-      console.log('test Url')
+      console.log("test Url");
       // ipcRenderer
       //   .invoke(
       //     "start-download",
@@ -264,162 +263,160 @@ function CheckUpdate(data) {
       //   .then(() => {
       //     dialogVisible.value = true;
       //   });
-      break
-    case 'three':
-      ipc.updater.start()
-      break
-    case 'threetest':
-      alert('更新后再次点击没有提示')
-      ipc.updater.test()
-      break
-    case 'four':
-      showForcedUpdate.value = true
-      break
+      break;
+    case "three":
+      ipc.updater.start();
+      break;
+    case "threetest":
+      alert("更新后再次点击没有提示");
+      ipc.updater.test();
+      break;
+    case "four":
+      showForcedUpdate.value = true;
+      break;
     default:
-      break
+      break;
   }
 }
 function openPreloadWindow() {
   ElMessageBox.alert(
-    t('home.openPreloadWindowError.content'),
-    t('home.openPreloadWindowError.title'),
+    t("home.openPreloadWindowError.content"),
+    t("home.openPreloadWindowError.title"),
     {
-      confirmButtonText: t('home.openPreloadWindowError.confirm'),
+      confirmButtonText: t("home.openPreloadWindowError.confirm"),
       callback: (action) => {},
     },
-  )
+  );
 }
 
 function handleClose() {
-  dialogVisible.value = false
+  dialogVisible.value = false;
 }
 
-const showInMyComputer = ref(0) // 0-不显示 1-开启 -1-关闭
-if (window.ipcBridge.processInfo.platform === 'win32') {
+const showInMyComputer = ref(0); // 0-不显示 1-开启 -1-关闭
+if (window.ipcBridge.processInfo.platform === "win32") {
   ipc.app.checkShowOnMyComputer().then((bool) => {
-    showInMyComputer.value = bool ? 1 : -1
-  })
+    showInMyComputer.value = bool ? 1 : -1;
+  });
 }
 function setShowOnMyComputer() {
-  ipc.app.setShowOnMyComputer(showInMyComputer.value === -1).then(
-    (success) => {
-      if (success) {
-        showInMyComputer.value = showInMyComputer.value === -1 ? 1 : -1
-      }
-    },
-  )
+  ipc.app.setShowOnMyComputer(showInMyComputer.value === -1).then((success) => {
+    if (success) {
+      showInMyComputer.value = showInMyComputer.value === -1 ? 1 : -1;
+    }
+  });
 }
 
 onIpcEvent(ipcEvents.download.progress, (percent) => {
-  console.log(percent)
-  percentage.value = percent
-})
+  console.log(percent);
+  percentage.value = percent;
+});
 
 onIpcEvent(ipcEvents.download.error, (isError) => {
   if (isError) {
-    progressStaus.value = 'exception'
-    percentage.value = 40
-    colors.value = '#d81e06'
+    progressStaus.value = "exception";
+    percentage.value = 40;
+    colors.value = "#d81e06";
   }
-})
+});
 onIpcEvent(ipcEvents.download.paused, (isPaused) => {
   if (isPaused) {
-    progressStaus.value = 'warning'
-    ElMessageBox.alert('下载由于未知原因被中断！', '提示', {
-      confirmButtonText: '重试',
+    progressStaus.value = "warning";
+    ElMessageBox.alert("下载由于未知原因被中断！", "提示", {
+      confirmButtonText: "重试",
       callback: (action) => {
-        ipc.app.startDownload('')
+        ipc.app.startDownload("");
       },
-    })
+    });
   }
-})
+});
 onIpcEvent(ipcEvents.download.done, (payload) => {
-  filePath.value = payload.filePath
-  progressStaus.value = 'success'
-  ElMessageBox.alert('更新下载完成！', '提示', {
-    confirmButtonText: '确定',
+  filePath.value = payload.filePath;
+  progressStaus.value = "success";
+  ElMessageBox.alert("更新下载完成！", "提示", {
+    confirmButtonText: "确定",
     callback: (action) => {
-      shell.openPath(filePath.value)
+      shell.openPath(filePath.value);
     },
-  })
-})
+  });
+});
 // electron-updater的更新监听
 onIpcEvent(ipcEvents.update.msg, (args) => {
   switch (args.state) {
     case -1:
       const msgdata = {
-        title: '发生错误',
+        title: "发生错误",
         message: args.msg as string,
-      }
-      dialogVisible.value = false
-      ipc.app.openErrorbox(msgdata)
-      break
+      };
+      dialogVisible.value = false;
+      ipc.app.openErrorbox(msgdata);
+      break;
     case 0:
-      ElMessage('正在检查更新')
-      break
+      ElMessage("正在检查更新");
+      break;
     case 1:
       ElMessage({
-        type: 'success',
-        message: '已检查到新版本，开始下载',
-      })
-      dialogVisible.value = true
-      break
+        type: "success",
+        message: "已检查到新版本，开始下载",
+      });
+      dialogVisible.value = true;
+      break;
     case 2:
-      ElMessage({ type: 'success', message: '无新版本' })
-      break
+      ElMessage({ type: "success", message: "无新版本" });
+      break;
     case 3:
-      percentage.value = Number((args.msg as ProgressInfo).percent.toFixed(1))
-      break
+      percentage.value = Number((args.msg as ProgressInfo).percent.toFixed(1));
+      break;
     case 4:
-      progressStaus.value = 'success'
-      ElMessageBox.alert('更新下载完成！', '提示', {
-        confirmButtonText: '确定',
+      progressStaus.value = "success";
+      ElMessageBox.alert("更新下载完成！", "提示", {
+        confirmButtonText: "确定",
         callback: (action) => {
-          ipc.app.confirmUpdate()
+          ipc.app.confirmUpdate();
         },
-      })
-      break
+      });
+      break;
     default:
-      break
+      break;
   }
-})
+});
 onIpcEvent(ipcEvents.update.hotStatus, (msg) => {
   switch (msg.status) {
-    case 'downloading':
-      ElMessage('正在下载')
-      break
-    case 'moving':
-      ElMessage('正在移动文件')
-      break
-    case 'finished':
-      ElMessage.success('成功,请重启')
-      break
-    case 'failed':
-      ElMessage.error(msg.message)
-      break
+    case "downloading":
+      ElMessage("正在下载");
+      break;
+    case "moving":
+      ElMessage("正在移动文件");
+      break;
+    case "finished":
+      ElMessage.success("成功,请重启");
+      break;
+    case "failed":
+      ElMessage.error(msg.message);
+      break;
     default:
-      break
+      break;
   }
-  console.log(msg)
-  updateStatus.value = msg.status
-})
+  console.log(msg);
+  updateStatus.value = msg.status;
+});
 
-const storeInputValue = ref('')
-const storeShowValue = ref('')
+const storeInputValue = ref("");
+const storeShowValue = ref("");
 
 const setStoreValue = () => {
-  ipc.app.setStoreValue({ key: 'token', value: storeInputValue.value })
-}
+  ipc.app.setStoreValue({ key: "token", value: storeInputValue.value });
+};
 
 const getStoreValue = () => {
-  ipc.app.getStoreValue({ key: 'token' }).then((res: string) => {
-    storeShowValue.value = res
-  })
-}
+  ipc.app.getStoreValue({ key: "token" }).then((res: string) => {
+    storeShowValue.value = res;
+  });
+};
 
 const deleteStoreValue = () => {
-  ipc.app.deleteStoreValue({ key: 'token' })
-}
+  ipc.app.deleteStoreValue({ key: "token" });
+};
 </script>
 
 <style>
@@ -430,7 +427,7 @@ const deleteStoreValue = () => {
 }
 
 body {
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: "Source Sans Pro", sans-serif;
 }
 
 #wrapper {

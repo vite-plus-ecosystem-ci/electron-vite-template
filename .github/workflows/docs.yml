@@ -4,8 +4,8 @@ on:
   push:
     branches: [main]
     paths:
-      - 'doc/**'
-      - '.github/workflows/docs.yml'
+      - "doc/**"
+      - ".github/workflows/docs.yml"
   workflow_dispatch:
 
 permissions:
@@ -20,7 +20,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 24.x
-          cache: 'pnpm'
+          cache: "pnpm"
       - run: pnpm install --frozen-lockfile
       - name: Build docs
         run: pnpm --filter docs build
@@ -30,4 +30,4 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: doc/.vitepress/dist
           force_orphan: true
-          commit_message: 'docs: deploy ${{ github.sha }}'
+          commit_message: "docs: deploy ${{ github.sha }}"

@@ -1,5 +1,5 @@
 // 仅示例
-import request from '@renderer/utils/request'
+import request from "@renderer/utils/request";
 
 // export function login (data) {
 //   return request({
@@ -19,7 +19,7 @@ import request from '@renderer/utils/request'
 
 export function message() {
   return request({
-    url: '/message',
-    method: 'get',
-  })
+    url: "/message",
+    method: "get",
+  });
 }

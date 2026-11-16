@@ -1,9 +1,9 @@
-import { ipcMain } from 'electron'
-import type { IpcContracts, IpcImpl } from 'ipc-contract'
-import { appIpcHandlers } from './ipc-main-handle'
-import { browserIpcHandlers } from './browser-handle'
-import { printIpcHandlers } from './print-handle'
-import { updaterIpcHandlers } from './hot-updater'
+import { ipcMain } from "electron";
+import type { IpcContracts, IpcImpl } from "ipc-contract";
+import { appIpcHandlers } from "./ipc-main-handle";
+import { browserIpcHandlers } from "./browser-handle";
+import { printIpcHandlers } from "./print-handle";
+import { updaterIpcHandlers } from "./hot-updater";
 
 /**
  * 把某个域的实现对象注册为 `域:方法` 形式的 IPC 通道。
@@ -15,25 +15,22 @@ function registerContracts<D extends keyof IpcContracts & string>(
   handlers: IpcImpl<IpcContracts[D]>,
 ): void {
   for (const [method, listener] of Object.entries(handlers)) {
-    if (typeof listener !== 'function') continue
+    if (typeof listener !== "function") continue;
     ipcMain.handle(
       `${domain}:${method}`,
-      listener as (
-        event: Electron.IpcMainInvokeEvent,
-        ...args: unknown[]
-      ) => void,
-    )
-    console.log(`已挂载 IPC: ${domain}:${method}`)
+      listener as (event: Electron.IpcMainInvokeEvent, ...args: unknown[]) => void,
+    );
+    console.log(`已挂载 IPC: ${domain}:${method}`);
   }
 }
 
 export const useMainDefaultIpc = () => {
   return {
     defaultIpc: () => {
-      registerContracts('app', appIpcHandlers)
-      registerContracts('browser', browserIpcHandlers)
-      registerContracts('print', printIpcHandlers)
-      registerContracts('updater', updaterIpcHandlers)
+      registerContracts("app", appIpcHandlers);
+      registerContracts("browser", browserIpcHandlers);
+      registerContracts("print", printIpcHandlers);
+      registerContracts("updater", updaterIpcHandlers);
     },
-  }
-}
+  };
+};

@@ -1,43 +1,37 @@
-import { BrowserWindow, Menu, Tray, app, shell } from 'electron'
-import {
-  trayURL,
-  trayIconPath,
-  trayTransparentIconPath,
-} from '@main/config/static-path'
+import { BrowserWindow, Menu, Tray, app, shell } from "electron";
+import { trayURL, trayIconPath, trayTransparentIconPath } from "@main/config/static-path";
 
-let tray: Tray
+let tray: Tray;
 
 export function initTray() {
-  console.log('trayIconPath', trayIconPath)
-  tray = new Tray(trayIconPath)
+  console.log("trayIconPath", trayIconPath);
+  tray = new Tray(trayIconPath);
 
-  tray.setToolTip(app.name)
+  tray.setToolTip(app.name);
 
-  if (process.platform === 'darwin') {
-    const trayWin = createTrayWindow()
-    tray.on('click', (e, bounds, position) => {
-      trayWin.setPosition(bounds.x, bounds.y)
-      trayWin.show()
-    })
+  if (process.platform === "darwin") {
+    const trayWin = createTrayWindow();
+    tray.on("click", (e, bounds, position) => {
+      trayWin.setPosition(bounds.x, bounds.y);
+      trayWin.show();
+    });
   } else {
-    tray.setContextMenu(
-      Menu.buildFromTemplate([{ role: 'about' }, { role: 'quit' }]),
-    )
+    tray.setContextMenu(Menu.buildFromTemplate([{ role: "about" }, { role: "quit" }]));
   }
 
-  tray.on('double-click', async () => {
-    let times = 3
+  tray.on("double-click", async () => {
+    let times = 3;
     while (times > 0) {
-      shell.beep()
-      tray.setImage(trayTransparentIconPath)
-      await sleep(500)
-      tray.setImage(trayIconPath)
-      await sleep(500)
-      times--
+      shell.beep();
+      tray.setImage(trayTransparentIconPath);
+      await sleep(500);
+      tray.setImage(trayIconPath);
+      await sleep(500);
+      times--;
     }
-  })
+  });
 
-  return tray
+  return tray;
 }
 
 function createTrayWindow() {
@@ -51,35 +45,35 @@ function createTrayWindow() {
     frame: false,
     hiddenInMissionControl: true,
     skipTaskbar: true,
-    visualEffectState: 'active',
-    vibrancy: 'menu',
-  })
-  win.loadURL(trayURL)
+    visualEffectState: "active",
+    vibrancy: "menu",
+  });
+  win.loadURL(trayURL);
 
-  win.on('blur', async () => {
-    let opacity = 1
+  win.on("blur", async () => {
+    let opacity = 1;
     while (opacity > 0) {
-      await sleep(10)
-      opacity -= 0.1
-      win.setOpacity(opacity)
+      await sleep(10);
+      opacity -= 0.1;
+      win.setOpacity(opacity);
     }
-    win.hide()
-  })
+    win.hide();
+  });
 
-  win.on('show', async () => {
-    let opacity = 0
+  win.on("show", async () => {
+    let opacity = 0;
     while (opacity < 1) {
-      await sleep(10)
-      opacity += 0.2
-      win.setOpacity(opacity)
+      await sleep(10);
+      opacity += 0.2;
+      win.setOpacity(opacity);
     }
-    win.focus()
-  })
-  return win
+    win.focus();
+  });
+  return win;
 }
 
 function sleep(ms: number) {
   return new Promise((resolve) => {
-    setTimeout(resolve, ms)
-  })
+    setTimeout(resolve, ms);
+  });
 }

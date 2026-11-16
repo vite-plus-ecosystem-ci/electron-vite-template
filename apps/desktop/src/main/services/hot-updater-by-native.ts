@@ -1,19 +1,14 @@
-import { app, BrowserWindow } from 'electron'
-import {
-  UpdateInfo,
-  UpdateJson,
-  UpdateStatus,
-  UpdateElectron,
-} from 'electron_updater_node_core'
-import { join } from 'path'
-import { version } from '../../../package.json'
-import { Readable } from 'stream'
+import { app, BrowserWindow } from "electron";
+import { UpdateInfo, UpdateJson, UpdateStatus, UpdateElectron } from "electron_updater_node_core";
+import { join } from "path";
+import { version } from "../../../package.json";
+import { Readable } from "stream";
 
-import updateConfig from '../../../updateConfig.json'
-import { webContentSend } from './web-content-send'
+import updateConfig from "../../../updateConfig.json";
+import { webContentSend } from "./web-content-send";
 
-import axios from 'axios'
-const request = axios.create()
+import axios from "axios";
+const request = axios.create();
 /**
  * 增量更新
  *
@@ -22,59 +17,58 @@ const request = axios.create()
  */
 export async function updater(windows?: BrowserWindow) {
   const statusCallback = (status: UpdateInfo) => {
-    if (windows)
-      webContentSend.update.hotStatus(windows.webContents, status)
-  }
+    if (windows) webContentSend.update.hotStatus(windows.webContents, status);
+  };
   const downloadFn = async (url: string): Promise<Readable> => {
     const response = await request({
-      method: 'get',
+      method: "get",
       url: url,
-      responseType: 'stream',
-    })
-    return response.data
-  }
-  const dirDirectory = join(app.getAppPath(), '..', '..')
-  const tempDirectory = join(dirDirectory, updateConfig.tempDirectory)
+      responseType: "stream",
+    });
+    return response.data;
+  };
+  const dirDirectory = join(app.getAppPath(), "..", "..");
+  const tempDirectory = join(dirDirectory, updateConfig.tempDirectory);
   try {
     const res = await request({
       url: `${updateConfig.url}/${updateConfig.updateJsonName}.json?time=${new Date().getTime()}`,
-    })
-    const updateJson: UpdateJson = res.data
+    });
+    const updateJson: UpdateJson = res.data;
     const updateElectron = new UpdateElectron(
       statusCallback,
-      updateConfig.updaterName || 'updater',
+      updateConfig.updaterName || "updater",
       version,
-      app.getPath('exe'),
+      app.getPath("exe"),
       tempDirectory,
       updateConfig.updateJsonName,
       updateJson,
       `${updateConfig.url}/${updateConfig.target + updateJson.version}`,
       downloadFn,
-    )
-    const needUpdateNumber = await updateElectron.checkForUpdates()
+    );
+    const needUpdateNumber = await updateElectron.checkForUpdates();
     // have nothing to update
     if (needUpdateNumber === 0) {
-      console.log('have nothing to update')
-      return UpdateStatus.HaveNothingUpdate
+      console.log("have nothing to update");
+      return UpdateStatus.HaveNothingUpdate;
     } else {
-      const download = await updateElectron.downloadUpdate()
+      const download = await updateElectron.downloadUpdate();
       if (download) {
-        const r = await updateElectron.install(false, true)
+        const r = await updateElectron.install(false, true);
         if (r) {
-          return UpdateStatus.Success
+          return UpdateStatus.Success;
         } else {
-          throw new Error('update Fail')
+          throw new Error("update Fail");
         }
       } else {
-        throw new Error('download Fail')
+        throw new Error("download Fail");
       }
     }
   } catch (error) {
-    console.log(error)
-    const updateInfo = new UpdateInfo()
-    updateInfo.status = 'failed'
-    updateInfo.message = error
-    statusCallback(updateInfo)
-    return UpdateStatus.Failed
+    console.log(error);
+    const updateInfo = new UpdateInfo();
+    updateInfo.status = "failed";
+    updateInfo.message = error;
+    statusCallback(updateInfo);
+    return UpdateStatus.Failed;
   }
 }

@@ -7,9 +7,7 @@
           class="tab-item"
           :style="{ left: item.positionX }"
           :class="{
-            active:
-              activeBrowserContentViewWebContentsId ===
-              item.browserContentViewWebContentsId,
+            active: activeBrowserContentViewWebContentsId === item.browserContentViewWebContentsId,
             dragging: item.positionX,
           }"
           @mousedown="mousedownHandle($event, item)"
@@ -19,10 +17,7 @@
           <div class="close-btn" @click="bvCloseHandle(item)">×</div>
         </div>
       </template>
-      <div
-        class="spacer"
-        :class="{ active: tabList.length === moveToIndex }"
-      ></div>
+      <div class="spacer" :class="{ active: tabList.length === moveToIndex }"></div>
       <div class="add-btn" @click="createDefaultBrowserView">+</div>
     </div>
     <div class="search-bar">
@@ -39,316 +34,272 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { ipc, ipcEvents, onIpcEvent } from '../utils/ipcRenderer'
-import { useI18n } from 'vue-i18n'
+import { ref, onMounted } from "vue";
+import { ipc, ipcEvents, onIpcEvent } from "../utils/ipcRenderer";
+import { useI18n } from "vue-i18n";
 
-const { t } = useI18n()
+const { t } = useI18n();
 
 interface TabItemData {
-  browserContentViewWebContentsId: number
-  title: string
-  url: string
-  positionX?: string
+  browserContentViewWebContentsId: number;
+  title: string;
+  url: string;
+  positionX?: string;
 }
 
-const useTransition = ref(true)
-const moveToIndex = ref(-1)
-const tabList = ref<TabItemData[]>([])
-const activeBrowserContentViewWebContentsId = ref<number>()
+const useTransition = ref(true);
+const moveToIndex = ref(-1);
+const tabList = ref<TabItemData[]>([]);
+const activeBrowserContentViewWebContentsId = ref<number>();
 
 onMounted(async () => {
-  const isNewTabContainer = localStorage.getItem('isNewTabContainer')
+  const isNewTabContainer = localStorage.getItem("isNewTabContainer");
   if (isNewTabContainer) {
-    localStorage.removeItem('isNewTabContainer')
+    localStorage.removeItem("isNewTabContainer");
     // 作为拖出tab的容器
-    const data = await ipc.browser.getLastDraggedTabData()
+    const data = await ipc.browser.getLastDraggedTabData();
     if (data) {
       tabList.value.push({
-        positionX: data.positionX === -1 ? '' : data.positionX + 'px',
+        positionX: data.positionX === -1 ? "" : data.positionX + "px",
         browserContentViewWebContentsId: data.browserContentViewWebContentsId,
         title: data.title,
         url: data.url,
-      })
-      activeBrowserContentViewWebContentsId.value =
-        data.browserContentViewWebContentsId
+      });
+      activeBrowserContentViewWebContentsId.value = data.browserContentViewWebContentsId;
     }
   } else {
     // 打开默认状态
-    createDefaultBrowserView()
+    createDefaultBrowserView();
   }
-})
+});
 
 async function createDefaultBrowserView() {
   try {
-    console.log('createDefaultBrowserView called')
-    const { browserContentViewWebContentsId } =
-      await ipc.browser.addDefaultView()
+    console.log("createDefaultBrowserView called");
+    const { browserContentViewWebContentsId } = await ipc.browser.addDefaultView();
     if (browserContentViewWebContentsId !== -1) {
-      activeBrowserContentViewWebContentsId.value =
-        browserContentViewWebContentsId
-      console.log(
-        'New BrowserView created with id:',
-        browserContentViewWebContentsId,
-      )
+      activeBrowserContentViewWebContentsId.value = browserContentViewWebContentsId;
+      console.log("New BrowserView created with id:", browserContentViewWebContentsId);
     } else {
-      console.warn('Failed to create BrowserView')
+      console.warn("Failed to create BrowserView");
     }
   } catch (error) {
-    console.error('createDefaultBrowserView error:', error)
+    console.error("createDefaultBrowserView error:", error);
   }
 }
 
 // 点击切换tab
 async function bvSelectHandle(item: TabItemData) {
   try {
-    console.log(
-      'bvSelectHandle called for tab:',
-      item.browserContentViewWebContentsId,
-    )
-    if (
-      activeBrowserContentViewWebContentsId.value !==
-      item.browserContentViewWebContentsId
-    ) {
-      const success = await ipc.browser.selectTab(
-        item.browserContentViewWebContentsId,
-      )
+    console.log("bvSelectHandle called for tab:", item.browserContentViewWebContentsId);
+    if (activeBrowserContentViewWebContentsId.value !== item.browserContentViewWebContentsId) {
+      const success = await ipc.browser.selectTab(item.browserContentViewWebContentsId);
       if (success) {
-        activeBrowserContentViewWebContentsId.value =
-          item.browserContentViewWebContentsId
-        searchKey.value = item.url
-        console.log(
-          'Tab selected successfully:',
-          item.browserContentViewWebContentsId,
-        )
+        activeBrowserContentViewWebContentsId.value = item.browserContentViewWebContentsId;
+        searchKey.value = item.url;
+        console.log("Tab selected successfully:", item.browserContentViewWebContentsId);
       } else {
-        console.warn(
-          'Failed to select tab:',
-          item.browserContentViewWebContentsId,
-        )
+        console.warn("Failed to select tab:", item.browserContentViewWebContentsId);
       }
     }
   } catch (error) {
-    console.error('bvSelectHandle error:', error)
+    console.error("bvSelectHandle error:", error);
   }
 }
 
 // 关闭tab
 async function bvCloseHandle(item: TabItemData) {
   try {
-    console.log(
-      'bvCloseHandle called for tab:',
-      item.browserContentViewWebContentsId,
-    )
-    await ipc.browser.destroyTab(item.browserContentViewWebContentsId)
-    const findIndex = tabList.value.findIndex((v) => v === item)
+    console.log("bvCloseHandle called for tab:", item.browserContentViewWebContentsId);
+    await ipc.browser.destroyTab(item.browserContentViewWebContentsId);
+    const findIndex = tabList.value.findIndex((v) => v === item);
     if (findIndex !== -1) {
-      tabList.value.splice(findIndex, 1)
-      console.log('Tab removed from UI:', item.browserContentViewWebContentsId)
+      tabList.value.splice(findIndex, 1);
+      console.log("Tab removed from UI:", item.browserContentViewWebContentsId);
     }
-    if (
-      activeBrowserContentViewWebContentsId.value ===
-      item.browserContentViewWebContentsId
-    ) {
+    if (activeBrowserContentViewWebContentsId.value === item.browserContentViewWebContentsId) {
       if (tabList.value.length > 1) {
-        const newIndex = findIndex > 0 ? findIndex - 1 : 0
-        await bvSelectHandle(tabList.value[newIndex])
+        const newIndex = findIndex > 0 ? findIndex - 1 : 0;
+        await bvSelectHandle(tabList.value[newIndex]);
       } else if (tabList.value.length === 1) {
-        await bvSelectHandle(tabList.value[0])
+        await bvSelectHandle(tabList.value[0]);
       } else {
         // 所有tab都关闭了，重置状态
-        activeBrowserContentViewWebContentsId.value = undefined
-        searchKey.value = ''
+        activeBrowserContentViewWebContentsId.value = undefined;
+        searchKey.value = "";
       }
     }
   } catch (error) {
-    console.error('bvCloseHandle error:', error)
+    console.error("bvCloseHandle error:", error);
   }
 }
 
 // 搜索
-const searchKey = ref('')
+const searchKey = ref("");
 async function searchHandle() {
-  let url: URL
+  let url: URL;
   try {
-    url = new URL(searchKey.value)
+    url = new URL(searchKey.value);
   } catch {
-    const query = encodeURIComponent(searchKey.value)
-    url = new URL(`https://www.bing.com/search?q=${query}`)
+    const query = encodeURIComponent(searchKey.value);
+    url = new URL(`https://www.bing.com/search?q=${query}`);
   }
   await ipc.browser.jumpToUrl({
     url: url.href,
-    browserContentViewWebContentsId:
-      activeBrowserContentViewWebContentsId.value,
-  })
+    browserContentViewWebContentsId: activeBrowserContentViewWebContentsId.value,
+  });
 }
 
-let isFocused = false
+let isFocused = false;
 function focusHandle() {
-  isFocused = true
+  isFocused = true;
 }
 function blurHandle() {
-  isFocused = false
+  isFocused = false;
 }
 
 // 监听tab信息更新
 onIpcEvent(
   ipcEvents.browser.tabDataUpdate,
   ({ browserContentViewWebContentsId, title, url, status }) => {
-    console.log(
-      'Received tab data update:',
-      browserContentViewWebContentsId,
-      title,
-      url,
-      status,
-    )
+    console.log("Received tab data update:", browserContentViewWebContentsId, title, url, status);
     const findIndex = tabList.value.findIndex(
-      (tab) =>
-        tab.browserContentViewWebContentsId === browserContentViewWebContentsId,
-    )
+      (tab) => tab.browserContentViewWebContentsId === browserContentViewWebContentsId,
+    );
     if (status === 1) {
       if (findIndex !== -1) {
-        tabList.value[findIndex].title = title
-        tabList.value[findIndex].url = url
+        tabList.value[findIndex].title = title;
+        tabList.value[findIndex].url = url;
         if (
-          browserContentViewWebContentsId ===
-            activeBrowserContentViewWebContentsId.value &&
+          browserContentViewWebContentsId === activeBrowserContentViewWebContentsId.value &&
           !isFocused
         ) {
-          searchKey.value = url
+          searchKey.value = url;
         }
       } else {
         tabList.value.push({
           browserContentViewWebContentsId,
           title,
           url,
-        })
+        });
         if (!isFocused) {
-          searchKey.value = url
+          searchKey.value = url;
         }
-        activeBrowserContentViewWebContentsId.value =
-          browserContentViewWebContentsId
+        activeBrowserContentViewWebContentsId.value = browserContentViewWebContentsId;
       }
     } else {
       if (findIndex !== -1) {
-        tabList.value.splice(findIndex, 1)
-        let nextIndex = findIndex
+        tabList.value.splice(findIndex, 1);
+        let nextIndex = findIndex;
         if (nextIndex >= tabList.value.length - 1) {
-          nextIndex = tabList.value.length - 1
+          nextIndex = tabList.value.length - 1;
         }
         if (nextIndex >= 0) {
-          bvSelectHandle(tabList.value[nextIndex])
+          bvSelectHandle(tabList.value[nextIndex]);
         }
       }
-      resetPosition()
+      resetPosition();
     }
   },
-)
+);
 
 // 监听拖拽tab位置更新
-let lastDragBrowserContentViewWebContentsId: number
+let lastDragBrowserContentViewWebContentsId: number;
 onIpcEvent(
   ipcEvents.browser.tabPositionXUpdate,
   ({ positionX, browserContentViewWebContentsId, dragTabOffsetX }) => {
-    lastDragBrowserContentViewWebContentsId = browserContentViewWebContentsId
+    lastDragBrowserContentViewWebContentsId = browserContentViewWebContentsId;
     const findIndex = tabList.value.findIndex(
-      (v) =>
-        v.browserContentViewWebContentsId === browserContentViewWebContentsId,
-    )
+      (v) => v.browserContentViewWebContentsId === browserContentViewWebContentsId,
+    );
     if (findIndex !== -1) {
-      const totalWidth = document.body.clientWidth - 40 // 添加按钮的占位
-      const eachWidth = Math.min(200, totalWidth / tabList.value.length)
+      const totalWidth = document.body.clientWidth - 40; // 添加按钮的占位
+      const eachWidth = Math.min(200, totalWidth / tabList.value.length);
 
-      let floorIndex = Math.floor(positionX / eachWidth)
+      let floorIndex = Math.floor(positionX / eachWidth);
 
       if (floorIndex > findIndex) {
-        floorIndex += 1
+        floorIndex += 1;
       }
       if (floorIndex > tabList.value.length) {
-        floorIndex = tabList.value.length
+        floorIndex = tabList.value.length;
       }
 
       if (moveToIndex.value === -1) {
-        useTransition.value = false
+        useTransition.value = false;
         setTimeout(() => {
-          useTransition.value = true
-        }, 100)
+          useTransition.value = true;
+        }, 100);
       }
-      moveToIndex.value = floorIndex
-      tabList.value[findIndex].positionX = positionX - dragTabOffsetX + 'px'
+      moveToIndex.value = floorIndex;
+      tabList.value[findIndex].positionX = positionX - dragTabOffsetX + "px";
       tabList.value.map((v, i) => {
         if (i !== findIndex) {
-          v.positionX = ''
+          v.positionX = "";
         }
-      })
+      });
     }
   },
-)
+);
 
 // 鼠标松开
 onIpcEvent(ipcEvents.browser.dragEnd, () => {
-  resetPosition()
-})
+  resetPosition();
+});
 
 // 重置拖拽效果
 function resetPosition() {
-  useTransition.value = false
+  useTransition.value = false;
   setTimeout(() => {
-    useTransition.value = true
-  }, 100)
+    useTransition.value = true;
+  }, 100);
   tabList.value.map((v) => {
-    v.positionX = ''
-  })
+    v.positionX = "";
+  });
   if (lastDragBrowserContentViewWebContentsId && moveToIndex.value !== -1) {
     const findIndex = tabList.value.findIndex(
-      (v) =>
-        v.browserContentViewWebContentsId ===
-        lastDragBrowserContentViewWebContentsId,
-    )
+      (v) => v.browserContentViewWebContentsId === lastDragBrowserContentViewWebContentsId,
+    );
     if (findIndex !== -1) {
-      tabList.value.splice(
-        moveToIndex.value,
-        0,
-        tabList.value.splice(findIndex, 1)[0],
-      )
+      tabList.value.splice(moveToIndex.value, 0, tabList.value.splice(findIndex, 1)[0]);
     }
   }
-  moveToIndex.value = -1
+  moveToIndex.value = -1;
 }
 
 // 拖拽逻辑 start
-let dragging = false
-let startPosition = { x: 0, y: 0 }
-let mousedownTime: number
-let mousedownItem: TabItemData
+let dragging = false;
+let startPosition = { x: 0, y: 0 };
+let mousedownTime: number;
+let mousedownItem: TabItemData;
 function mousedownHandle(e: MouseEvent, item: TabItemData) {
-  localStorage.setItem('isNewTabContainer', 'true')
-  e.preventDefault()
-  mousedownItem = item
-  mousedownTime = Date.now()
-  dragging = true
-  startPosition = { x: e.x, y: e.y }
+  localStorage.setItem("isNewTabContainer", "true");
+  e.preventDefault();
+  mousedownItem = item;
+  mousedownTime = Date.now();
+  dragging = true;
+  startPosition = { x: e.x, y: e.y };
   ipc.browser.mousedown({
     offsetX: e.offsetX,
-  })
+  });
 }
 
 document.onmouseup = (e) => {
-  mouseupHandle(e)
-}
+  mouseupHandle(e);
+};
 
 function mouseupHandle(e: MouseEvent) {
-  localStorage.removeItem('isNewTabContainer')
-  if ((e.target as HTMLDivElement).className !== 'close-btn') {
+  localStorage.removeItem("isNewTabContainer");
+  if ((e.target as HTMLDivElement).className !== "close-btn") {
     if (Date.now() - mousedownTime < 200) {
       // 按下松开200ms间隔内判断为点击时间
-      bvSelectHandle(mousedownItem)
+      bvSelectHandle(mousedownItem);
     } else if (dragging) {
-      ipc.browser.mouseup()
+      ipc.browser.mouseup();
     }
   }
 
-  dragging = false
+  dragging = false;
 }
 
 document.onmousemove = (e) => {
@@ -358,11 +309,10 @@ document.onmousemove = (e) => {
       screenY: e.screenY, // 鼠标在显示器的y坐标
       startX: startPosition.x, // 按下鼠标时在窗口的x坐标
       startY: startPosition.y, // 按下鼠标时在窗口的y坐标
-      browserContentViewWebContentsId:
-        mousedownItem.browserContentViewWebContentsId,
-    })
+      browserContentViewWebContentsId: mousedownItem.browserContentViewWebContentsId,
+    });
   }
-}
+};
 
 // 拖拽逻辑 end
 </script>

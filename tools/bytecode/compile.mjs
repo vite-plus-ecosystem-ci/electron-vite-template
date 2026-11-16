@@ -16,57 +16,59 @@
  * 诚实定位：这是防"随手解包看源码"的减速带，不是墙——cachedData 中字符串常量
  * 全部保留（通道名/URL 可被 strings 提取），XOR 的 key 就写在 loader 里。
  */
-import { spawnSync } from 'child_process'
-import { createRequire } from 'module'
-import { fileURLToPath } from 'url'
-import { existsSync, readFileSync, writeFileSync, copyFileSync } from 'fs'
-import { join } from 'path'
-import vm from 'vm'
-import v8 from 'v8'
-import Module from 'module'
+import { spawnSync } from "child_process";
+import { createRequire } from "module";
+import { fileURLToPath } from "url";
+import { existsSync, readFileSync, writeFileSync, copyFileSync } from "fs";
+import { join } from "path";
+import vm from "vm";
+import v8 from "v8";
+import Module from "module";
 
-const require = createRequire(import.meta.url)
+const require = createRequire(import.meta.url);
 
 if (!process.versions.electron) {
   // 普通 Node 环境：以 ELECTRON_RUN_AS_NODE 重启自身，对齐打包运行时的 V8
-  const electronPath = require('electron')
-  const selfPath = fileURLToPath(import.meta.url)
+  const electronPath = require("electron");
+  const selfPath = fileURLToPath(import.meta.url);
   const result = spawnSync(electronPath, [selfPath], {
-    stdio: 'inherit',
-    env: { ...process.env, ELECTRON_RUN_AS_NODE: '1' },
-  })
-  process.exit(result.status ?? 1)
+    stdio: "inherit",
+    env: { ...process.env, ELECTRON_RUN_AS_NODE: "1" },
+  });
+  process.exit(result.status ?? 1);
 }
 
 // —— 以下运行在 Electron 的 Node 模式，V8 与打包后的运行时完全一致 ——
 
 // 与 loader.cjs 保持一致
-const XOR_KEY = 211
+const XOR_KEY = 211;
 
-const mainDir = join(process.cwd(), 'dist', 'electron', 'main')
-const mainJsPath = join(mainDir, 'main.cjs')
+const mainDir = join(process.cwd(), "dist", "electron", "main");
+const mainJsPath = join(mainDir, "main.cjs");
 
 if (!existsSync(mainJsPath)) {
-  console.error('未找到 dist/electron/main/main.cjs，请先执行构建（npm run build）')
-  process.exit(1)
+  console.error("未找到 dist/electron/main/main.cjs，请先执行构建（npm run build）");
+  process.exit(1);
 }
 
 // 这两个 flags 与 loader.cjs 一致：--no-lazy 让函数全量编译进缓存，--no-flush-bytecode 防编译期间被 GC 冲掉
-v8.setFlagsFromString('--no-lazy')
-v8.setFlagsFromString('--no-flush-bytecode')
+v8.setFlagsFromString("--no-lazy");
+v8.setFlagsFromString("--no-flush-bytecode");
 
-const source = readFileSync(mainJsPath, 'utf8')
+const source = readFileSync(mainJsPath, "utf8");
 // 必须以 CJS 包装器包裹后再编译：loader 的 runInThisContext 会拿到包装函数
 // 并传入 (exports, require, module, __filename, __dirname) 执行
-const script = new vm.Script(Module.wrap(source))
-const bytecode = Buffer.from(script.createCachedData())
+const script = new vm.Script(Module.wrap(source));
+const bytecode = Buffer.from(script.createCachedData());
 
 // XOR 混淆：防 strings 提取，不防人
 for (let i = 0; i < bytecode.length; i++) {
-  bytecode[i] ^= XOR_KEY
+  bytecode[i] ^= XOR_KEY;
 }
 
-writeFileSync(join(mainDir, 'main.bin'), bytecode)
-copyFileSync(join(fileURLToPath(new URL('.', import.meta.url)), 'loader.cjs'), mainJsPath)
+writeFileSync(join(mainDir, "main.bin"), bytecode);
+copyFileSync(join(fileURLToPath(new URL(".", import.meta.url)), "loader.cjs"), mainJsPath);
 
-console.log(`字节码编译完成：main.bin（${Math.round(bytecode.length / 1024)} KB）+ loader 壳已写入 ${mainDir}`)
+console.log(
+  `字节码编译完成：main.bin（${Math.round(bytecode.length / 1024)} KB）+ loader 壳已写入 ${mainDir}`,
+);

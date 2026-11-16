@@ -7,13 +7,13 @@
 
 /** done 事件的载荷 */
 export interface DownloadDonePayload {
-  filePath: string
+  filePath: string;
 }
 
 /** 文件下载事件推送 */
 export interface DownloadEvents {
-  progress(percent: number): void
-  error(isError: boolean): void
-  paused(isPaused: boolean): void
-  done(payload: DownloadDonePayload): void
+  progress(percent: number): void;
+  error(isError: boolean): void;
+  paused(isPaused: boolean): void;
+  done(payload: DownloadDonePayload): void;
 }

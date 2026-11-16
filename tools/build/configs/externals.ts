@@ -1,4 +1,4 @@
-import { builtinModules } from 'module'
+import { builtinModules } from "module";
 
 /**
  * 主进程与 preload 产物均为 CJS，external 依赖保留 require、运行时从 node_modules 解析。
@@ -8,4 +8,4 @@ import { builtinModules } from 'module'
  * 不再需要 external 桩；若渲染层代码误引入 electron/node 模块会直接构建报错，
  * 这是刻意的安全哨兵。
  */
-export const mainExternals = [...builtinModules, 'electron', 'semver']
+export const mainExternals = [...builtinModules, "electron", "semver"];

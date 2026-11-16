@@ -8,5 +8,5 @@
 /** 窗口事件推送 */
 export interface WindowEvents {
   /** 主进程向新窗口发送的数据 */
-  sendData(data: unknown): void
+  sendData(data: unknown): void;
 }

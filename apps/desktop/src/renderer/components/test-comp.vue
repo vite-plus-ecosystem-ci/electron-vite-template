@@ -19,11 +19,7 @@
         </svg>
       </div>
       <div class="square">
-        <svg
-          class="checkmark"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 52 52"
-        >
+        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
           <path class="checkmark__check" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
         </svg>
       </div>
@@ -32,89 +28,89 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onBeforeUnmount } from 'vue'
+import { ref, computed, onBeforeUnmount } from "vue";
 
-type Status = 'idle' | 'running' | 'completed'
+type Status = "idle" | "running" | "completed";
 
-const status = ref<Status>('idle')
-const progress = ref(0)
-const animationFrameId = ref<number | null>(null)
+const status = ref<Status>("idle");
+const progress = ref(0);
+const animationFrameId = ref<number | null>(null);
 
 const buttonClass = computed(() => [
-  'label',
+  "label",
   {
-    active: status.value === 'running',
-    completed: status.value === 'completed',
+    active: status.value === "running",
+    completed: status.value === "completed",
   },
-])
+]);
 
 const circleStyle = computed(() => {
-  if (status.value === 'running') {
+  if (status.value === "running") {
     return {
-      '--progress-height': `${progress.value}%`,
-      'background-color': 'transparent',
-    }
+      "--progress-height": `${progress.value}%`,
+      "background-color": "transparent",
+    };
   }
-  if (status.value === 'completed') {
-    return { '--progress-height': '100%' }
+  if (status.value === "completed") {
+    return { "--progress-height": "100%" };
   }
-  return { '--progress-height': '0%' }
-})
+  return { "--progress-height": "0%" };
+});
 
 const labelStyle = computed(() => {
-  if (status.value === 'running') {
-    const rotation = -90 + (360 * progress.value) / 100
+  if (status.value === "running") {
+    const rotation = -90 + (360 * progress.value) / 100;
     return {
-      '--progress-transform': `rotate(${rotation}deg) translate(20px) rotate(${rotation}deg)`,
-    }
+      "--progress-transform": `rotate(${rotation}deg) translate(20px) rotate(${rotation}deg)`,
+    };
   }
-  return {}
-})
+  return {};
+});
 
 const startProgress = () => {
-  if (status.value === 'running') return
-  if (status.value === 'completed') {
-    resetProgress()
-    return
+  if (status.value === "running") return;
+  if (status.value === "completed") {
+    resetProgress();
+    return;
   }
 
-  status.value = 'running'
-  progress.value = 0
+  status.value = "running";
+  progress.value = 0;
 
-  const duration = 3500 // 动画持续时间 (ms)
-  let startTime: number | null = null
+  const duration = 3500; // 动画持续时间 (ms)
+  let startTime: number | null = null;
 
   const animate = (timestamp: number) => {
-    if (!startTime) startTime = timestamp
-    const elapsedTime = timestamp - startTime
-    const currentProgress = Math.min((elapsedTime / duration) * 100, 100)
-    progress.value = currentProgress
+    if (!startTime) startTime = timestamp;
+    const elapsedTime = timestamp - startTime;
+    const currentProgress = Math.min((elapsedTime / duration) * 100, 100);
+    progress.value = currentProgress;
 
     if (elapsedTime < duration) {
-      animationFrameId.value = requestAnimationFrame(animate)
+      animationFrameId.value = requestAnimationFrame(animate);
     } else {
-      status.value = 'completed'
-      animationFrameId.value = null
+      status.value = "completed";
+      animationFrameId.value = null;
     }
-  }
+  };
 
-  animationFrameId.value = requestAnimationFrame(animate)
-}
+  animationFrameId.value = requestAnimationFrame(animate);
+};
 
 const resetProgress = () => {
   if (animationFrameId.value) {
-    cancelAnimationFrame(animationFrameId.value)
-    animationFrameId.value = null
+    cancelAnimationFrame(animationFrameId.value);
+    animationFrameId.value = null;
   }
-  status.value = 'idle'
-  progress.value = 0
-}
+  status.value = "idle";
+  progress.value = 0;
+};
 
 onBeforeUnmount(() => {
   if (animationFrameId.value) {
-    cancelAnimationFrame(animationFrameId.value)
+    cancelAnimationFrame(animationFrameId.value);
   }
-})
+});
 </script>
 
 <style scoped lang="scss">
@@ -204,7 +200,7 @@ onBeforeUnmount(() => {
 }
 
 .label .circle::before {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   top: 0;
@@ -215,7 +211,7 @@ onBeforeUnmount(() => {
 }
 
 .label::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   bottom: 0;
@@ -228,10 +224,7 @@ onBeforeUnmount(() => {
   margin: auto;
   opacity: 0;
   visibility: hidden;
-  transform: var(
-    --progress-transform,
-    'rotate(-90deg) translate(17px) rotate(0)'
-  );
+  transform: var(--progress-transform, "rotate(-90deg) translate(17px) rotate(0)");
 }
 
 /* Active state (progress running) */
